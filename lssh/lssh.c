@@ -7,7 +7,7 @@
 
 #define MAX_TOKENS 100
 #define COMMANDLINE_BUFSIZE 1024
-#define DEBUG 1  // Set to 1 to turn on some debugging output, or 0 to turn off
+#define DEBUG 0  // Set to 1 to turn on some debugging output, or 0 to turn off
 
 /**
  * Parse the command line.
@@ -88,7 +88,20 @@ int main(void)
         if (strcmp(args[0], "exit") == 0) {
             break;
         }
+        pid_t pid;
 
+        pid = fork();
+        if(pid == 0) {
+            if (execvp(args[0], args) == -1) {
+                perror("lsh");
+            }
+            exit(EXIT_FAILURE);
+        }else if( pid < 0) {
+            perror("lsh");
+        } else {
+            execvp("ls", args);
+        }
+        
         #if DEBUG
 
         // Some debugging output
