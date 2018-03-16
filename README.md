@@ -10,17 +10,17 @@ Add your answers inline, below, with your pull request.
     * created - A process that has just been created is in this state, while the process is in the created state it is awaiting admission to the "ready" state.
     * ready- A process in the ready state has been loaded into main memory and is waiting for a CPU for execution. 
     * running- A process is in the running state when it chosen for execution. There is only one running process per CPU or core at a time.
-    * blocked- A process is in the blocked state when it cannot carry on without an external change in state or event occurring. ex- A printer not being availble.
-    * Terminated- A Terminated process is A ZOmbie Process
+    * blocked- A process is in the blocked state when it cannot carry on without an external change in state or event occurring. ex- A printer not being available- so the process has to wait and is blocked until the printer becomes available.
+    * Terminated- A Terminated process is A Zombie Process
 
 2.  What is a Zombie Process? How does it get created? How does it get destroyed?
 
-* A Zombie Process is a process that has completed execution but still has an entry in the process table: it's a process in the "Terminated state.
+* A Zombie Process is a process that has completed execution but still has an entry in the process table: it's a process in the "Terminated" state.
   A Zombie Process is created when a child process is needed to allow its parent process to read its exit status.
-  A zombie process is destroyed or "reaped once the exit status is read via the wait sysytem call, theozmbie entry is then removed from the resource table.
+  A Zombie process is destroyed or "reaped" once the exit status is read via the wait system call, the zombie entry is then removed from the resource table.
 
 3.  Describe the job of the Scheduler in the OS in general.
-The job if the scheduler is to decide which process runs at a ceratin point in time.
+The job of the scheduler is to decide which process runs at a ceratin point in time.
 
 4.  Describe the benefits of the MLFQ over a plain Round-Robin scheduler.
 * The Multi-Level-Feedback-Queue's major benefit over a plain Roound-Robin scheduler is that it takes priority level into account. In a Round-Robin scheduler urgent requests don't get handled any faster than other requests in the Queue- because they dont have Prioroity levels.
