@@ -4,14 +4,26 @@
 
 Add your answers inline, below, with your pull request.
 
-1. List all of the main states a process may be in at any point in time on a
-   standard Unix system. Briefly explain what each of these states mean.
+1.  List all of the main states a process may be in at any point in time on a
+    standard Unix system. Briefly explain what each of these states mean.
 
-2. What is a Zombie Process? How does it get created? How does it get destroyed?
+    * created - A process that has just been created is in this state, while the process is in the created state it is awaiting admission to the "ready" state.
+    * ready- A process in the ready state has been loaded into main memory and is waiting for a CPU for execution. 
+    * running- A process is in the running state when it chosen for execution. There is only one running process per CPU or core at a time.
+    * blocked- A process is in the blocked state when it cannot carry on without an external change in state or event occurring. ex- A printer not being availble.
+    * Terminated- A Terminated process is A ZOmbie Process
 
-3. Describe the job of the Scheduler in the OS in general.
+2.  What is a Zombie Process? How does it get created? How does it get destroyed?
 
-4. Describe the benefits of the MLFQ over a plain Round-Robin scheduler.
+* A Zombie Process is a process that has completed execution but still has an entry in the process table: it's a process in the "Terminated state.
+  A Zombie Process is created when a child process is needed to allow its parent process to read its exit status.
+  A zombie process is destroyed or "reaped once the exit status is read via the wait sysytem call, theozmbie entry is then removed from the resource table.
+
+3.  Describe the job of the Scheduler in the OS in general.
+The job if the scheduler is to decide which process runs at a ceratin point in time.
+
+4.  Describe the benefits of the MLFQ over a plain Round-Robin scheduler.
+* The Multi-Level-Feedback-Queue's major benefit over a plain Roound-Robin scheduler is that it takes priority level into account. In a Round-Robin scheduler urgent requests don't get handled any faster than other requests in the Queue- because they dont have Prioroity levels.
 
 ## Programming Exercise: The Lambda School Shell (`lssh`)
 
@@ -21,7 +33,7 @@ Unix, similar to bash!
 At the end of the day, you should be able to run your shell, the run commands within it like so:
 
 ```
-[bash]$ ./lssh 
+[bash]$ ./lssh
 lambda-shell$ ls -l
 total 32
 -rwxr-xr-x  1 beej  staff  9108 Mar 15 13:28 lssh
@@ -38,7 +50,7 @@ lambda-shell$ head lssh.c
 #define COMMANDLINE_BUFSIZE 1024
 #define DEBUG 0  // Set to 1 to turn on some debugging output
 lambda-shell$ exit
-[bash]$ 
+[bash]$
 ```
 
 General attack is to:
@@ -107,19 +119,19 @@ lambda-shell$ pwd
 /Users/example
 lambda-shell$ cd foobar
 chdir: No such file or directory
-lambda-shell$ 
+lambda-shell$
 ```
 
 If the user entered `cd` as the first argument:
 
-1. Check to make sure they've entered 2 total arguments
-2. Run the system call `chdir()` on the second argument to change directories
-3. Error check the result of `chdir()`. If it returns `-1`, meaning an error
-   occurred, you can print out an error message with:
-   ```
-   perror("chdir"); // #include <errno.h> to use this
-   ```
-4. Execute a `continue` statement to short-circuit the rest of the main loop.
+1.  Check to make sure they've entered 2 total arguments
+2.  Run the system call `chdir()` on the second argument to change directories
+3.  Error check the result of `chdir()`. If it returns `-1`, meaning an error
+    occurred, you can print out an error message with:
+    ```
+    perror("chdir"); // #include <errno.h> to use this
+    ```
+4.  Execute a `continue` statement to short-circuit the rest of the main loop.
 
 Note that `.` and `..` are actual directories. You don't need to write any
 special case code to handle them.
@@ -138,16 +150,15 @@ an `&`.
 
 If it is:
 
-1. Strip the `&` off the `args` (by setting that pointer to `NULL`).
-2. Run the command in the child as usual.
-3. Prevent the parent from `wait()`ing for the child to complete. Just give a
-   new prompt immediately. The child will continue to run in the background.
+1.  Strip the `&` off the `args` (by setting that pointer to `NULL`).
+2.  Run the command in the child as usual.
+3.  Prevent the parent from `wait()`ing for the child to complete. Just give a
+    new prompt immediately. The child will continue to run in the background.
 
 Note that you might get weird output when doing this, like the prompt might
 appear before the program completes, or not at all if the program's output
 overwrites it. If it looks like it hangs at the end, just hit `RETURN` to get
 another prompt back.
-
 
 ### Extra Credit: File Redirection
 
@@ -161,28 +172,30 @@ ls -l > foo.txt
 
 Check the `args` array for a `>`. If it's there:
 
-1. Get the output file name from the next element in `args`.
-2. Strip everything out of `args` from the `>` on. (Set the `args` element with
-   the `>` in it to `NULL`).
-3. In the child process:
-    1. `open()` the file for output. Store the resultant file descriptor in a
-       variable `fd`.
-    2. Use the `dup2()` system call to make `stdout` (file descriptor `1`) refer
-       to the newly-opened file instead:
+1.  Get the output file name from the next element in `args`.
+2.  Strip everything out of `args` from the `>` on. (Set the `args` element with
+    the `>` in it to `NULL`).
+3.  In the child process:
 
-	    ```c
-		int fd = open(...
-		dup2(fd, 1);  // Now stdout goes to the file instead
-		```
-	3. `exec` the program like normal.
+    1.  `open()` the file for output. Store the resultant file descriptor in a
+        variable `fd`.
+    2.  Use the `dup2()` system call to make `stdout` (file descriptor `1`) refer
+        to the newly-opened file instead:
+
+        ````c
+        		int fd = open(...
+        		dup2(fd, 1);  // Now stdout goes to the file instead
+        		```
+        ````
+
+    3.  `exec` the program like normal.
 
 ### Extra Credit: Pipes
 
 In bash, you can pipe the output of one command into the input of another with
 the `|` symbol.
 
-For example, this takes the output of `ls -l` and uses it as the input for `wc
--l` (which counts the number of lines in the input):
+For example, this takes the output of `ls -l` and uses it as the input for `wc -l` (which counts the number of lines in the input):
 
 ```
 ls -l | wc -l
